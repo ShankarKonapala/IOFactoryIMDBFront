@@ -11,33 +11,24 @@
   }
   
   .img-fluid {
-    width: 20rem; /* Adjust image width as needed */
-    height: 15rem; /* Maintain aspect ratio */
+    width: 20rem;
+    height: 15rem;
     margin-right: 20px;
-    border-radius: 1rem 1rem 1rem 1rem; /* Add space between image and text */
+    border-radius: 1rem 1rem 1rem 1rem;
   }
   
   .movie-info {
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
     text-decoration: none;
-    color: white
-     /* Allow movie info to grow and take up remaining space */
+    color: white;
+    position: relative;
   }
   
-
-
-
-/* .card{
-    display: flex;
-    flex-direction: row;
-    border: solid 1px;
-    border-radius: 1rem;
-    padding: 0.5rem;
-}
-
-.movieImg{
-    display: flex;
-    margin: 1rem 1rem;
-    max-width: fit-content;
-    max-height: 10rem;
-} */
+  .edit-button {
+    position: absolute;
+    top: 5rem;
+    right: 10rem;
+    cursor: pointer;
+  }

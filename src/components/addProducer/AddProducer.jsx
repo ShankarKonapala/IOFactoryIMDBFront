@@ -3,9 +3,8 @@ import { useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addProducerAsync } from '../../store/producerSlice';
-// import './addProducerStyles.css';
 
-const AddProducer = ({display,setDisplay}) => {
+const AddProducer = ({onClose}) => {
   const dispatch = useDispatch();
 
   const [producerDetails, setProducerDetails] = useState({
@@ -34,44 +33,38 @@ const AddProducer = ({display,setDisplay}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (handleValidation()) {
-      try {
-        dispatch(addProducerAsync(producerDetails));
-        toast.success('Producer added successfully');
-        setProducerDetails({
-          producerName: '',
-          gender: '',
-          dob: '',
-          bio: '',
-        });
-      } catch (error) {
-        toast.error('Failed to add producer');
-      }
+      dispatch(addProducerAsync(producerDetails))
+        .then((result) => {
+          toast.success('Producer added successfully');
+          setProducerDetails({
+            producerName: '',
+            gender: '',
+            dob: '',
+            bio: '',
+          });
+        })
+        .catch((error) => {
+          toast.error('Failed to add producer', error);
+        })
     }
   };
 
   const handleValidation = () => {
-    const { producerName, gender, dob, bio } = producerDetails;
+    const { producerName } = producerDetails;
     if (producerName.length < 3) {
       toast.error('ProducerName should be greater than 3 characters', toastOptions);
-      return false;
-    } else if (!(gender === 'male' || gender === 'female')) {
-      toast.error('Gender should be either male or female', toastOptions);
-      return false;
-    } else if (bio.trim() === '') {
-      toast.error('Bio should not be empty', toastOptions);
-      return false;
-    } else if (!dob) {
-      toast.error('DOB should not be empty', toastOptions);
       return false;
     }
     return true;
   };
 
   return (
-    <div className='add-producer-page'>
-      <div className="add-producer-form">
+    <div className='add-producer-popup'>
+      <div className="add-producer-popup-inner">
+      <button className="close-btn" onClick={onClose}>x</button>
+        <h2>Add Producer</h2>
         <form className='form' onSubmit={handleSubmit}>
-        <h3>Add Producer</h3>
+          <h3>Add Producer</h3>
           <label>
             Name:
             <input

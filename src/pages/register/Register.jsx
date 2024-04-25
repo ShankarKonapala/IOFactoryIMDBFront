@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { registerRoute } from '../../utils/APIRoutes';
-import './register.css'; // Import the external CSS file
+import './register.css';
 
 const Register = () => {
     const navigate = useNavigate();

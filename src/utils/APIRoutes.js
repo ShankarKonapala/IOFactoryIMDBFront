@@ -1,4 +1,5 @@
-export const host = "https://iofactoryback.onrender.com";
+export const host = "http://localhost:5000";
+// export const host = "https://iofactoryimdbback.onrender.com";
 export const registerRoute = `${host}/api/auth/register`;
 export const loginRoute = `${host}/api/auth/login`;
 export const addMovieRoute = `${host}/api/movies/addMovie`;
@@ -7,3 +8,4 @@ export const getAllActorsRoute = `${host}/api/actors/getAllActors`;
 export const addProducerRoute = `${host}/api/producers/addProducer`;
 export const getAllProducersRoute = `${host}/api/producers/getAllProducers`;
 export const getAllMovies = `${host}/api/movies/getAllMovies`;
+export const updateMovieRoute = `${host}/api/movies/updateMovie`;

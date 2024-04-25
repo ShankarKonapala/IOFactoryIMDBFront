@@ -1,36 +1,56 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import MovieCard from '../../components/movieCard/MovieCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies } from "../../store/moviesSlice";
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import "./home.css";
+import UpdateMovie from '../../components/updateMovie/UpdateMovie';
+import { fetchActors } from '../../store/actorSlice';
+import { fetchProducers } from '../../store/producerSlice';
 
-import "./home.css"
 
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const movies = useSelector(state => state.movies.movies);
   const status = useSelector(state => state.movies.status);
 
+  const [currentMovieToUpdate, setCurrentMovieToUpdate] = useState();
+  const [showPopup, setShowPopup] = useState(false);
+
+  const { actors } = useSelector((state) => state.actors);
+  const { producers } = useSelector((state) => state.producers);
+
+  const handleEditClick = (value) => {
+    setCurrentMovieToUpdate(value)
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
+  const handleUpdateMovie = (updatedMovieData) => {
+    
+    console.log('Updated movie data:', updatedMovieData);
+
+    handleClosePopup();
+  };
+  
   useEffect(() => {
-    if (status === "initial") {
-      dispatch(fetchMovies());
+    const fetchUserDetails = async () => {
+      if (!localStorage.getItem("imdb-user")) {
+        navigate("/login");
+      } else {
+        dispatch(fetchMovies());
+        dispatch(fetchActors());
+        dispatch(fetchProducers())
+      }
     }
-  }, [status, dispatch]);
+    fetchUserDetails();
+  }, [dispatch,navigate]);
 
-  console.log(status);
-
-  // const [query, setQuery] = useState('');
-  // const handleSearch = (event) => {
-  //   setQuery(event.target.value);
-  // };
-
-  // const filteredMovies = (query === '')
-  //   ? movies
-  //   : movies.filter(movie =>
-  //     movie.title.toLowerCase().includes(query.toLowerCase())
-  //   );
-  // const sortedMovies = [...filteredMovies];
-  // sortedMovies.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
   return (
     <>
       <div className='movies'>
@@ -42,10 +62,19 @@ const Home = () => {
           status === ("loading" || "initial") ?
             <div className="loading">...loading</div> :
             movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie}></MovieCard>
+              <MovieCard key={movie._id} movie={movie} handleEditClick={handleEditClick}></MovieCard>
             ))
         }
       </div>
+      {showPopup && (
+        <UpdateMovie
+          movie={currentMovieToUpdate}
+          onClose={handleClosePopup}
+          onSubmit={handleUpdateMovie}
+          actors={actors}
+          producers={producers}
+        />
+      )}
     </>
   )
 }

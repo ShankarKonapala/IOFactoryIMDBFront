@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { addActorAsync } from '../../store/actorSlice';
 
-const AddActor = () => {
+const AddActor = ({onClose}) => {
+
   const dispatch = useDispatch();
 
   const [actorDetails, setActorDetails] = useState({
@@ -25,42 +25,31 @@ const AddActor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (handleValidation()) {
-      try {
-        dispatch(addActorAsync(actorDetails));
+      dispatch(addActorAsync(actorDetails))
+      .then((result) => {
         toast.success('Actor added successfully');
-        setActorDetails({
-          actorName: '',
-          gender: '',
-          dob: '',
-          bio: '',
-        });
-      } catch (error) {
-        toast.error('Failed to add actor');
-      }
+        onClose();
+      })
+      .catch((error) => {
+        toast.error('Failed to add actor',error );
+      });
     }
-  };
+  }
 
   const handleValidation = () => {
-    const { actorName, gender, dob, bio } = actorDetails;
+    const { actorName } = actorDetails;
     if (actorName.length < 3) {
       toast.error('ActorName should be greater than 3 characters');
-      return false;
-    } else if (!(gender === 'male' || gender === 'female')) {
-      toast.error('Gender should be either male or female');
-      return false;
-    } else if (bio.trim() === '') {
-      toast.error('Bio should not be empty');
-      return false;
-    } else if (!dob) {
-      toast.error('DOB should not be empty');
       return false;
     }
     return true;
   };
 
   return (
-    <div className='add-actor-page'>
-      <div className="add-actor-form">
+    <div className='add-actor-popup'>
+      <div className="add-actor-popup-inner">
+        <button className="close-btn" onClick={onClose}>x</button>
+        <h2>AddActor</h2>
         <form className='form' onSubmit={handleSubmit}>
           <h3>Add Actor</h3>
           <label>
@@ -71,6 +60,7 @@ const AddActor = () => {
               value={actorDetails.actorName}
               onChange={handleChange}
               required
+              min="3"
             />
           </label>
           <br />

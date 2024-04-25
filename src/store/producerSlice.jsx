@@ -21,10 +21,10 @@ export const fetchProducers = createAsyncThunk('producers/fetchProducers', async
 export const addProducerAsync = createAsyncThunk('producers/addProducerAsync', async (producerData, { rejectWithValue }) => {
   try {
     const response = await axios.post(addProducerRoute, producerData);
-    console.log(response.data);
     return response.data;
   } catch (error) {
-    return rejectWithValue(error.response.data);
+    rejectWithValue(error.response.data);
+    
   }
 });
 
@@ -50,7 +50,7 @@ const producersSlice = createSlice({
       })
       .addCase(addProducerAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.producers.push(action.payload);
+        state.producers.push(action.payload.producer);
       })
       .addCase(addProducerAsync.rejected, (state, action) => {
         state.status = 'failed';

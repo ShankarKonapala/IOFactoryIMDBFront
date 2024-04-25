@@ -4,7 +4,8 @@ import { addActorRoute, getAllActorsRoute } from "../utils/APIRoutes"
 
 const initialState = {
   actors: [],
-  status: 'initial',
+  fetchActorsStatus: 'initial',
+  addActorAsyncStatus: 'initial',
   error: null,
 };
 
@@ -34,25 +35,25 @@ const actorsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchActors.pending, (state) => {
-        state.status = 'loading';
+        state.fetchActorsStatus = 'loading';
       })
       .addCase(fetchActors.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.fetchActorsStatus = 'succeeded';
         state.actors = action.payload;
       })
       .addCase(fetchActors.rejected, (state, action) => {
-        state.status = 'failed';
+        state.fetchActorsStatus = 'failed';
         state.error = action.error.message;
       })
       .addCase(addActorAsync.pending, (state) => {
-        state.status = 'loading';
+        state.addActorAsyncStatus = 'loading';
       })
       .addCase(addActorAsync.fulfilled, (state, action) => {
-        const {actorName, _id} = action.payload
-        state.actors.push({actorName, _id});
+        state.addActorAsyncStatus = "succeeded"
+        state.actors.push(action.payload.actor);
       })
       .addCase(addActorAsync.rejected, (state, action) => {
-        state.status = 'failed';
+        state.addActorAsyncStatus = 'failed';
         state.error = action.payload ? action.payload.message : 'Failed to add actor';
       });
   },
